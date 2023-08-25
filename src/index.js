@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-const queries = require('./queries');  
-// prompts user with questions 
+const queries = require('./queries');
+
 const start = () => {
     inquirer.prompt([
         {
@@ -23,21 +23,36 @@ const start = () => {
         switch (answer.action) {
             case 'View all departments':
                 queries.viewAllDepartments()
-                    .then(() => {
+                    .then(([rows]) => {
+                        console.table(rows);
+                        start();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         start();
                     });
                 break;
 
             case 'View all roles':
                 queries.viewAllRoles()
-                    .then(() => {
+                    .then(([rows]) => {
+                        console.table(rows);
+                        start();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         start();
                     });
                 break;
 
             case 'View all employees':
                 queries.viewAllEmployees()
-                    .then(() => {
+                    .then(([rows]) => {
+                        console.table(rows);
+                        start();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         start();
                     });
                 break;
@@ -53,36 +68,107 @@ const start = () => {
                 ])
                 .then(answer => queries.addDepartment(answer.departmentName))
                 .then(() => {
+                    console.log('Department added successfully!');
+                    start();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     start();
                 });
                 break;
 
             case 'Add a role':
                 inquirer.prompt([
-                    // ... (same prompts for this case)
+                    {
+                        type: 'input',
+                        name: 'title',
+                        message: 'Enter the title of the role:',
+                        validate: input => input ? true : 'This field cannot be left blank!'
+                    },
+                    {
+                        type: 'input',
+                        name: 'salary',
+                        message: 'Enter the salary for the role:',
+                        validate: input => isNaN(input) ? 'Please enter a valid number for salary.' : true
+                    },
+                    {
+                        type: 'list',
+                        name: 'departmentId',
+                        message: 'Select the department for the role:',
+                        choices: ['1', '2', '3']
+                    }
                 ])
                 .then(answer => queries.addRole(answer.title, answer.salary, answer.departmentId))
                 .then(() => {
+                    console.log('Role added successfully!');
+                    start();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     start();
                 });
                 break;
 
             case 'Add an employee':
                 inquirer.prompt([
-                    // ... (same prompts for this case)
+                    {
+                        type: 'input',
+                        name: 'firstName',
+                        message: 'Enter the first name of the employee:',
+                        validate: input => input ? true : 'This field cannot be left blank!'
+                    },
+                    {
+                        type: 'input',
+                        name: 'lastName',
+                        message: 'Enter the last name of the employee:',
+                        validate: input => input ? true : 'This field cannot be left blank!'
+                    },
+                    {
+                        type: 'list',
+                        name: 'roleId',
+                        message: 'Select the role for the employee:',
+                        choices: ['1', '2', '3']
+                    },
+                    {
+                        type: 'input',
+                        name: 'managerId',
+                        message: 'Enter the manager ID for the employee (leave blank if none):',
+                        default: ''
+                    }
                 ])
                 .then(answer => queries.addEmployee(answer.firstName, answer.lastName, answer.roleId, answer.managerId || null))
                 .then(() => {
+                    console.log('Employee added successfully!');
+                    start();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     start();
                 });
                 break;
 
             case 'Update an employee role':
                 inquirer.prompt([
-                    // ... (same prompts for this case)
+                    {
+                        type: 'input',
+                        name: 'employeeId',
+                        message: 'Enter the ID of the employee you wish to update:',
+                        validate: input => input ? true : 'This field cannot be left blank!'
+                    },
+                    {
+                        type: 'list',
+                        name: 'newRoleId',
+                        message: 'Select the new role for the employee:',
+                        choices: ['1', '2', '3']
+                    }
                 ])
                 .then(answer => queries.updateEmployeeRole(answer.employeeId, answer.newRoleId))
                 .then(() => {
+                    console.log('Employee role updated successfully!');
+                    start();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     start();
                 });
                 break;
@@ -101,5 +187,5 @@ const start = () => {
         start();
     });
 };
-// return to start menu 
+
 start();

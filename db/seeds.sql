@@ -40,5 +40,3 @@ VALUES
 ('Eva', 'Green', 3, 2),  -- Senior Software Engineer 
 ('Mike', 'Tyson', 5, 3), -- HR Assistant reporting 
 ('Amy', 'Adams', 7, 4);  -- Finance Manager reporting 
-
--
