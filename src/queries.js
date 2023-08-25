@@ -1,5 +1,5 @@
 const db = require('./db');
-// defines query functions 
+
 const viewAllDepartments = () => {
     return db.promise().query('SELECT * FROM department');
 };
@@ -24,6 +24,9 @@ const addEmployee = (firstName, lastName, roleId, managerId) => {
     return db.promise().query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [firstName, lastName, roleId, managerId]);
 };
 
+const updateEmployeeRole = (employeeId, newRoleId) => {
+    return db.promise().query('UPDATE employee SET role_id = ? WHERE id = ?', [newRoleId, employeeId]);
+};
 
 module.exports = {
     viewAllDepartments,
@@ -31,5 +34,6 @@ module.exports = {
     viewAllEmployees,
     addDepartment,
     addRole,
-    addEmployee
+    addEmployee,
+    updateEmployeeRole
 };
